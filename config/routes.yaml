@@ -1,0 +1,59 @@
+homepage:
+    path: /
+    controller: App\Controller\HomeController::index
+
+user-profile:
+    path: /profile
+    controller: App\Controller\HomeController::profile
+
+users:
+    path: /users
+    controller: App\Controller\UsersController::index
+
+manage-user:
+    path: /manage-user
+    controller: App\Controller\UsersController::manageUser
+
+delete-user:
+    path: /delete-user/{id}
+    controller: App\Controller\UsersController::deleteUser
+    defaults:
+        id: ''
+
+tasks:
+    path: /tasks
+    controller: App\Controller\TasksController::index
+
+my-tasks:
+    path: /my-task
+    controller: App\Controller\TasksController::myTask
+
+accept-task:
+    path: /accept-task/{id}
+    controller: App\Controller\TasksController::acceptTask
+    defaults:
+        id: ''
+
+finish-task:
+    path: /finish-task/{id}
+    controller: App\Controller\TasksController::finishTask
+    defaults:
+        id: ''
+
+manage-task:
+    path: /manage-task
+    controller: App\Controller\TasksController::manageTask
+
+delete-task:
+    path: /delete-task/{id}
+    controller: App\Controller\TasksController::deleteTask
+    defaults:
+        id: ''
+
+add-need:
+    path: /add-need
+    controller: App\Controller\HomeController::addNeed
+
+add-capability:
+    path: /add-capability
+    controller: App\Controller\HomeController::addCapability
