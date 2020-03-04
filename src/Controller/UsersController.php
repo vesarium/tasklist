@@ -45,9 +45,9 @@ class UsersController extends AbstractController
             $user->setRoles(['ROLE_USER']);
             $em->persist($user);
             $em->flush();
-            $this->addFlash('success', 'User '.($postData['id'] == '0'? "added": "updated").' successfullly.');
+            $this->addFlash('success', 'User '.($postData['id'] == '0'? "added": "updated").' successfully.');
         } else {
-            $this->addFlash('error', 'Misssing required parameters.');
+            $this->addFlash('error', 'Missing required parameters.');
         }
         return $this->redirectToRoute('users');
     }
@@ -59,7 +59,7 @@ class UsersController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->remove($user);
             $em->flush();
-            $this->addFlash('success', 'User deleted successfullly.');
+            $this->addFlash('success', 'User deleted successfully.');
         } else {
             $this->addFlash('error', 'User not found.');
         }
