@@ -1,0 +1,107 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('css/dataTable-Bootstarp.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('css/dataTables.bootstrap4.min.css') }}" rel="stylesheet" type="text/css"/>
+    <style>
+        #request-list_filter{
+            float: right;
+        }
+        #request-list td, #request-list th {
+            text-align: center;
+            font-size: 20px;
+        }
+        #offer-list_filter{
+            float: right;
+        }
+        #offer-list td, #offer-list th {
+            text-align: center;
+            font-size: 20px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <!-- block -->
+    <div class="block">
+        <div class="navbar navbar-inner block-header" style="margin-bottom: 30px;">
+            <div class="muted pull-left">Exchange Offers (From Other Users)</div>
+        </div>
+        <div class="table-responsive">
+            <table id="offer-list" class="table table-striped table-head-color dataTable no-footer" width="100%">
+                <thead>
+                    <tr>
+                        <th width="25%">Requested By</th>
+                        <th width="15%">RP</th>
+                        <th width="30%">Description</th>
+                        <th width="15%">Status</th>
+                        <th width="15%">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for offer in offers %}
+                        <tr>
+                            <td>{{offer.username}}</td>
+                            <td>{{offer.respect_points}}</td>
+                            <td>{{offer.description|slice(0, 15) ~ '...'}}</td>
+                            <td>{{offer.status}}</td>
+                            <td>
+                                <a href="{{ path('exchange-offer-accept') ~ '/' ~ offer.id }}" class="btn btn-primary">Accept</a>
+                                <a href="{{ path('exchange-offer-reject') ~ '/' ~ offer.id }}" class="btn btn-danger">Reject</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="block">
+        <div class="navbar navbar-inner block-header" style="margin-bottom: 30px;">
+            <div class="muted pull-left">Requested RPs List</div>
+        </div>
+        <div class="table-responsive">
+            <table id="request-list" class="table table-striped table-head-color dataTable no-footer" width="100%">
+                <thead>
+                    <tr>
+                        <th width="30%">Requested To</th>
+                        <th width="15%">RP</th>
+                        <th width="40%">Description</th>
+                        <th width="15%">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for request in requests %}
+                        <tr>
+                            <td>{{request.username}}</td>
+                            <td>{{request.respect_points}}</td>
+                            <td>{{request.description|slice(0, 15) ~ '...'}}</td>
+                            <td>{{request.status}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- /block -->
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('js/dataTables.responsive.min.js') }}"></script>
+    <script type="text/javascript">
+        jQuery('#offer-list').DataTable({
+            "aoColumnDefs": [
+                {'bSortable': false, 'aTargets': [0]},
+            ]
+        });
+        jQuery('#request-list').DataTable({
+            "aoColumnDefs": [
+                {'bSortable': false, 'aTargets': [0]},
+            ]
+        });
+    </script>
+{% endblock %}

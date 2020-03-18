@@ -57,3 +57,23 @@ add-need:
 add-capability:
     path: /add-capability
     controller: App\Controller\HomeController::addCapability
+
+manage-respect-points:
+    path: /manage-respect-points
+    controller: App\Controller\RespectPointsController::manageRespectPoints
+
+exchange-respect-points:
+    path: /exchange-respect-points
+    controller: App\Controller\RespectPointsController::exchangeRespectPoints
+
+exchange-offer-accept:
+    path: /exchange-offer-accept/{id}
+    controller: App\Controller\RespectPointsController::exchangeOfferAccept
+    defaults:
+        id: ''
+
+exchange-offer-reject:
+    path: /exchange-offer-reject/{id}
+    controller: App\Controller\RespectPointsController::exchangeOfferReject
+    defaults:
+        id: ''

@@ -5,17 +5,22 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Entity\Needs;
 use App\Entity\Capabilities;
+use App\Entity\ExchangeOffers;
 use Symfony\Component\HttpFoundation\Request;
 
 class HomeController extends AbstractController
 {
     public function index()
     {
-        return $this->render('home/index.html.twig');
+        if ($this->getUser()->isAdmin()) {
+            return $this->render('home/index.html.twig');
+        }
+        $offers = $this->getDoctrine()->getRepository(ExchangeOffers::class)->getOfferList($this->getUser()->getId());
+        $requests = $this->getDoctrine()->getRepository(ExchangeOffers::class)->getRequestList($this->getUser()->getId());
+        return $this->render('home/dashboard.html.twig', ['offers' => $offers, 'requests' => $requests]);
     }
     
     public function profile() {
-        $needs = $this->getDoctrine()->getRepository(Needs::class)->findBy(['user' => $this->getUser()]);
         $capabilities = $this->getDoctrine()->getRepository(Capabilities::class)->findBy(['user' => $this->getUser()]);
         return $this->render('home/profile.html.twig', [
             'needs' => $needs,
