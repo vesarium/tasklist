@@ -58,7 +58,7 @@ class TasksController extends AbstractController
     {
         $task = $this->getDoctrine()->getRepository(Task::class)->findOneBy(['id' => intval($id)]);
         if ($task) {
-            if (($task->getUser() !== $this->getUser()) && !$this->getUser()->isAdmin()) {
+            if (($task->getUser() === $this->getUser()) || $this->getUser()->isAdmin()) {
                 $em = $this->getDoctrine()->getManager();
                 $em->remove($task);
                 $em->flush();
@@ -106,7 +106,7 @@ class TasksController extends AbstractController
                 $em->flush();
                 $this->addFlash('success', 'Task finished successfully.');
             } else {
-                $this->addFlash('error', 'You can not finished your own task.');
+                $this->addFlash('error', 'You can not finish your own task.');
             }
         } else {
             $this->addFlash('error', 'Task doesn\'t exists.');
