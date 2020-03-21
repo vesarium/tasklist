@@ -21,6 +21,7 @@ class HomeController extends AbstractController
     }
     
     public function profile() {
+        $needs = $this->getDoctrine()->getRepository(Needs::class)->findBy(['user' => $this->getUser()]);
         $capabilities = $this->getDoctrine()->getRepository(Capabilities::class)->findBy(['user' => $this->getUser()]);
         return $this->render('home/profile.html.twig', [
             'needs' => $needs,
