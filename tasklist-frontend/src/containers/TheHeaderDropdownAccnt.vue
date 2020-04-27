@@ -15,10 +15,10 @@
         </div>
       </CHeaderNavLink>
     </template>
-    <CDropdownHeader tag="div" class="text-center" color="light">
+    <!-- <CDropdownHeader tag="div" class="text-center" color="light">
       <strong>Account</strong>
-    </CDropdownHeader>
-    <CDropdownItem>
+    </CDropdownHeader> -->
+    <!-- <CDropdownItem>
       <CIcon name="cil-bell"/> Updates
       <CBadge color="info" class="ml-auto">{{ itemsCount }}</CBadge>
     </CDropdownItem>
@@ -33,18 +33,18 @@
     <CDropdownItem>
       <CIcon name="cil-comment-square" /> Comments
       <CBadge color="warning" class="ml-auto">{{ itemsCount }}</CBadge>
-    </CDropdownItem>
-    <CDropdownHeader
+    </CDropdownItem> -->
+    <!-- <CDropdownHeader
       tag="div"
       class="text-center"
       color="light"
     >
       <strong>Settings</strong>
-    </CDropdownHeader>
-    <CDropdownItem>
+    </CDropdownHeader> -->
+    <CDropdownItem to='/users/profile'>
       <CIcon name="cil-user" /> Profile
     </CDropdownItem>
-    <CDropdownItem>
+    <!-- <CDropdownItem>
       <CIcon name="cil-settings" /> Settings
     </CDropdownItem>
     <CDropdownItem>
@@ -54,23 +54,37 @@
     <CDropdownItem>
       <CIcon name="cil-file" /> Projects
       <CBadge color="primary" class="ml-auto">{{ itemsCount }}</CBadge>
-    </CDropdownItem>
+    </CDropdownItem> -->
     <CDropdownDivider/>
-    <CDropdownItem>
+    <!-- <CDropdownItem>
       <CIcon name="cil-shield-alt" /> Lock Account
-    </CDropdownItem>
-    <CDropdownItem>
+    </CDropdownItem> -->
+    <CDropdownItem @click="logout()">
       <CIcon name="cil-lock-locked" /> Logout
     </CDropdownItem>
   </CDropdown>
 </template>
 
 <script>
+
+import { AUTH_LOGOUT } from "../store/actions/auth";
+
 export default {
   name: 'TheHeaderDropdownAccnt',
   data () {
     return { 
       itemsCount: 42
+    }
+  },
+  methods: {
+    logout: function() {
+      let self = this;
+      this.$store.dispatch(AUTH_LOGOUT).then(() => {
+        self.$router.push('/login');
+      });
+    },
+    profile:function() {
+      this.self.$router.push('/users/profile');
     }
   }
 }

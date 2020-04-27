@@ -3,26 +3,37 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\Controller\Annotations as Rest;
+use FOS\RestBundle\View\View;
 use App\Entity\Task;
 use App\Entity\User;
-use Symfony\Component\HttpFoundation\Request;
 
-class TasksController extends AbstractController
+class TasksController extends FOSRestController
 {
-    public function index()
+    /**
+     * Get tasks list
+     * @Rest\Get("/tasks")
+     * @return View
+     */
+    public function getTasksList(): View
     {
         $tasks = $this->getDoctrine()->getRepository(Task::class)->getTasksList($this->getUser()->getId());
-        if ($this->getUser()->isAdmin()) {
-            return $this->render('tasks/manage-tasks.html.twig', ['tasks' => $tasks]);
-        }
-        return $this->render('tasks/index.html.twig', ['tasks' => $tasks]);
+        return $this->view(['status' => 'true', 'data' => $tasks], Response::HTTP_OK);
     }
     
-    public function myTask(Request $request) {
+    /**
+     * Get my tasks list
+     * @Rest\Get("/my-tasks")
+     * @return View
+     */
+    public function getMyTasksList(Request $request) {
         $tasks = $this->getDoctrine()->getRepository(Task::class)->getUsersTasksList($this->getUser()->getId());
-        return $this->render('tasks/my-tasks.html.twig', ['tasks' => $tasks]);
+        return $this->view(['status' => 'true', 'data' => $tasks], Response::HTTP_OK);
     }
-        
+    
     public function manageTask(Request $request) {
         $postData = $request->request->all();
         $em = $this->getDoctrine()->getManager();
@@ -54,25 +65,33 @@ class TasksController extends AbstractController
         return $this->redirectToRoute($this->getUser()->isAdmin()? 'tasks': 'my-tasks');
     }
     
-    public function deleteTask($id)
+    /**
+     * Delete specific task
+     * @Rest\Delete("/task/{id}")
+     * @return View
+     */
+    public function deleteTask(int $id): View
     {
-        $task = $this->getDoctrine()->getRepository(Task::class)->findOneBy(['id' => intval($id)]);
+        $task = $this->getDoctrine()->getRepository(Task::class)->findOneBy(['id' => $id]);
         if ($task) {
             if (($task->getUser() !== $this->getUser()) && !$this->getUser()->isAdmin()) {
                 $em = $this->getDoctrine()->getManager();
                 $em->remove($task);
                 $em->flush();
-                $this->addFlash('success', 'Task deleted successfully.');
-            } else {
-                $this->addFlash('error', 'You can not delete other user\'s task.');
+                return $this->view(['status' => 'true', 'message' => 'Task deleted successfully'], Response::HTTP_OK);
             }
-        } else {
-            $this->addFlash('error', 'Task doesn\'t exists.');
+            return $this->view(['status' => 'false', 'message' => "You can not delete other user's task"], Response::HTTP_BAD_REQUEST);
         }
-        return $this->redirectToRoute($this->getUser()->isAdmin()? 'tasks': 'my-tasks');
+        return $this->view(['status' => 'false', 'message' => "Task doesn't exists"], Response::HTTP_BAD_REQUEST);
     }
     
-    public function acceptTask($id) {
+    /**
+     * Accept specific task
+     * @Rest\Get("/accept-task/{id}")
+     * @return View
+     */
+    public function acceptTask(int $id): View
+    {
         $task = $this->getDoctrine()->getRepository(Task::class)->findOneBy(['id' => intval($id), 'status' => 'Added']);
         if ($task) {
             if ($task->getUser() !== $this->getUser()) {
@@ -81,17 +100,20 @@ class TasksController extends AbstractController
                 $task->setAcceptedBy($this->getUser());
                 $em->persist($task);
                 $em->flush();
-                $this->addFlash('success', 'Task accepted successfully.');
-            } else {
-                $this->addFlash('error', 'You can not accept your own task.');
+                return $this->view(['status' => 'true', 'message' => "Task accepted successfully"], Response::HTTP_OK);
             }
-        } else {
-            $this->addFlash('error', 'Task doesn\'t exists.');
-        }
-        return $this->redirectToRoute('tasks');
+            return $this->view(['status' => 'false', 'message' => "You can not accept your own task"], Response::HTTP_BAD_REQUEST);
+       }
+       return $this->view(['status' => 'false', 'message' => "Task doesn't exists"], Response::HTTP_BAD_REQUEST);
     }
-    
-    public function finishTask($id) {
+
+    /**
+     * Finish specific task
+     * @Rest\Get("/finish-task/{id}")
+     * @return View
+     */
+    public function finishTask(int $id): View
+    {
         $task = $this->getDoctrine()->getRepository(Task::class)->findOneBy(['id' => intval($id), 'status' => 'Accepted', 'accepted_by' => $this->getUser()]);
         if ($task) {
             if ($task->getUser() !== $this->getUser()) {
@@ -104,14 +126,11 @@ class TasksController extends AbstractController
                 $user->setRespectPoint(intval($user->getRespectPoint()) + intval($task->getRespectPoints()));
                 $em->persist($user);
                 $em->flush();
-                $this->addFlash('success', 'Task finished successfully.');
-            } else {
-                $this->addFlash('error', 'You can not finished your own task.');
+                return $this->view(['status' => 'false', 'message' => "Task finished successfully"], Response::HTTP_OK);
             }
-        } else {
-            $this->addFlash('error', 'Task doesn\'t exists.');
+            return $this->view(['status' => 'false', 'message' => "You can not finished your own task"], Response::HTTP_BAD_REQUEST);
         }
-        return $this->redirectToRoute('tasks');
+        return $this->view(['status' => 'false', 'message' => "Task doesn't exists"], Response::HTTP_BAD_REQUEST);
     }
     
 }

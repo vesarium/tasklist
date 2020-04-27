@@ -23,6 +23,9 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
+    sensio_framework_extra.view.listener:
+        alias: Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener
+
     app.event.authentication_success_response:
         class: App\EventListener\AuthenticationSuccessListener
         tags:

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 
@@ -23,6 +24,18 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\NotBlank(message = "Email cannot be blank")
+     * @Assert\Email(
+     *     message = "The email '{{ value }}' is not a valid email",
+     *     checkMX = true
+     * )
+     * @Assert\Length(
+     *      min = 10,
+     *      max = 180,
+     *      minMessage = "Email must be at least {{ limit }} characters long",
+     *      maxMessage = "Email cannot be longer than {{ limit }} characters",
+     *      allowEmptyString = false
+     * )
      */
     private $email;
 
@@ -39,6 +52,14 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180)
+     * @Assert\NotBlank(message = "Name cannot be blank")
+     * @Assert\Length(
+     *      min = 5,
+     *      max = 180,
+     *      minMessage = "Name must be at least {{ limit }} characters long",
+     *      maxMessage = "Name cannot be longer than {{ limit }} characters",
+     *      allowEmptyString = false
+     * )
      */
     private $name;
 
@@ -85,10 +106,7 @@ class User implements UserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
+        return ($roles);
     }
     
     public function isAdmin(): bool
@@ -157,6 +175,16 @@ class User implements UserInterface
         $this->respect_point = $respect_point;
 
         return $this;
+    }
+    
+    public function getObject(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'email' => $this->getEmail(),
+            'respect_points' => $this->getRespectPoint()
+        ];
     }
 
     public function getApiToken(): ?string

@@ -55,4 +55,12 @@ class Capabilities
 
         return $this;
     }
+    
+    public function getObject(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'title' => $this->getTitle()
+        ];
+    }
 }

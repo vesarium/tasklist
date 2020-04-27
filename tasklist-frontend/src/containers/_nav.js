@@ -14,13 +14,13 @@ export default [
       },
       {
         _name: 'CSidebarNavTitle',
-        _children: ['Theme']
+        _children: ['Theme'],
       },
       {
         _name: 'CSidebarNavItem',
         name: 'Colors',
         to: '/theme/colors',
-        icon: 'cil-drop'
+        icon: 'cil-drop',show: false,
       },
       {
         _name: 'CSidebarNavItem',

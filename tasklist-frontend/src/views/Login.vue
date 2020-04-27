@@ -6,6 +6,9 @@
           <CCard class="">
             <CCardBody class="p-4">
               <form @submit.prevent="checkLogin" validate>
+                <CRow class="justify-content-center p-4">
+                  <h1 class="text-center">Login</h1>
+                </CRow>
                 <CAlert
                   color="danger"
                   closeButton
@@ -13,9 +16,6 @@
                 >
                   Invalid Credentials
                 </CAlert>
-                <CRow class="justify-content-center p-4">
-                  <h1 class="text-center">Login</h1>
-                </CRow>
                 <CInput
                   required
                   valid-feedback="Thank you :)"
@@ -54,6 +54,7 @@
 </template>
 
 <script>
+import { AUTH_REQUEST } from "../store/actions/auth";
 import axios from 'axios'
 
 export default {
@@ -66,20 +67,15 @@ export default {
     };
   },
   methods: {
-    checkLogin() {
+    checkLogin: function() {
       let self = this;
-      axios.post("/login_check", {
-          email: this.email,
-          password: this.password
-        })
-        .then(function(response) {
-          localStorage.token = response.data.token;
-          self.$router.push('/dashboard');
-        })
-        .catch(function(error) {
-          self.error = true;
-          delete localStorage.token;
-        });
+      const { email, password } = this;
+      this.$store.dispatch(AUTH_REQUEST, { email, password }).then((result) => {
+        if(result.status) { self.$router.push('/dashboard'); } {
+          this.error = true;
+          this.email = result.message;
+        }
+      });
     }
   }
 };

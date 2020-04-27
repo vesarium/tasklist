@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import auth from "./modules/auth";
 Vue.use(Vuex);
+
+// const debug = process.env.NODE_ENV !== "production";
 
 const state = {
   sidebarShow: 'responsive',
@@ -23,5 +26,8 @@ const mutations = {
 
 export default new Vuex.Store({
   state,
-  mutations
+  mutations,
+  modules: {
+    auth
+  },
 })
