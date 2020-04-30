@@ -2,7 +2,7 @@
 
 import Repository from "./Repository";
 
-const resource = "/users";
+const resource = "/tasks";
 
 export default {
     get() {

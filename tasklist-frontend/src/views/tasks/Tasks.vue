@@ -90,7 +90,7 @@
               <div class="form-group form-row">
                   <label class="col-sm-3" for="duedate">Due Date</label>
                   <div class="col-sm-9">
-                    <input type="text" v-model="task.duedate" id="duedate" name="duedate" class="form-control" :class="{ 'is-invalid': submitted && $v.task.duedate.$error }" />
+                    <input type="date" v-model="task.duedate" id="duedate" name="duedate" class="form-control" :class="{ 'is-invalid': submitted && $v.task.duedate.$error }" />
                     <div v-if="submitted && !$v.task.duedate.required" class="invalid-feedback">Due Date is required</div>
                   </div>
               </div>
@@ -188,11 +188,11 @@ const items = [
 const fields = [
   //{ label :'User Id', key: 'id', _style:'width:10%' },
   { label :'Title', key: 'title', },
-  { label :'Description', key: 'title', },
-  { label :'Due Date', key: 'title', },
-  { label :'RP', key: 'title', },
-  { label :'Accepted By', key: 'title', sorter: false },
-  { label :'Status', key: 'title', sorter: false },
+  { label :'Description', key: 'description', },
+  { label :'Due Date', key: 'due_date', },
+  { label :'RP', key: 'respect_points', },
+  { label :'Accepted By', key: 'accepted_by', sorter: false },
+  { label :'Status', key: 'status', sorter: false },
   { 
     key: 'actions', 
     label: '', 
@@ -205,12 +205,12 @@ const fields = [
 const fieldsTasks = [
   //{ label :'User Id', key: 'id', _style:'width:10%' },
   { label :'Title', key: 'title', },
-  { label :'Description', key: 'title', },
-  { label :'Posted By', key: 'title', },
-  { label :'Due Date', key: 'title', },
-  { label :'RP', key: 'title', },
-  { label :'Accepted By', key: 'title', sorter: false },
-  { label :'Status', key: 'title', sorter: false },
+  { label :'Description', key: 'description', },
+  { label :'Posted By', key: 'user', },
+  { label :'Due Date', key: 'due_date', },
+  { label :'RP', key: 'respect_points', },
+  { label :'Accepted By', key: 'accepted_by', sorter: false },
+  { label :'Status', key: 'status', sorter: false },
   { 
     key: 'actions', 
     label: '', 

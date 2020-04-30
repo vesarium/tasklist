@@ -1,7 +1,7 @@
 
 import axios from 'axios'
 
-const baseDomain = "http://tasklist-api.local:8081";
+const baseDomain = "http://tasklist-api.local";
 const baseURL = `${baseDomain}/api`;
 
 const token = localStorage.getItem("token") || "";
